@@ -1,0 +1,70 @@
+@import '../../style/variables';
+
+.header {
+    padding: 50px 0;
+    &__wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    &__info {
+        font-weight: 700;
+        font-size: 28px;
+        line-height: 33px;
+        span {
+            color: $color-red;
+        }
+    }
+    &__nav {
+        ul {
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 24px;
+            line-height: 28px;
+            li {
+                margin: 0 8px;
+            }
+            a {
+                color: #000;
+                &:hover {
+                    color: $color-red;
+                }
+            }
+            .active {
+                color: $color-red;
+            }
+
+        }
+        
+    }
+}
+
+
+@media (max-width: 1200px) {
+    .header {
+        padding: 35px 0;
+        &__info {
+            font-size: 24px;
+        }
+        &__nav {
+            ul {
+                font-size: 20px;
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+@media (max-width: 576px) {
+    .header {
+        &__wrapper {
+            flex-direction: column;
+        }
+        &__info {
+            text-align: center;
+        }
+
+    }
+}

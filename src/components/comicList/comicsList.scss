@@ -1,0 +1,83 @@
+.comicListSection {
+    .comicsList {
+        margin: 49px 0 45px 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 225px);
+        gap: 67px 55px;
+        justify-content: space-between;
+        &__item {
+            img {
+                width: 225px;
+                object-fit: cover;
+                filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.25));
+            }
+            p {
+                font-weight: 700;
+                font-size: 14px;
+                line-height: 16px;
+                margin-top: 10px;
+    
+            }
+        }
+        &__price {
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 16px;
+            color: rgba(0, 0, 0, 0.6);
+        }
+        a {
+            display: none;
+        }
+    
+    
+    }
+    .button.button__load{
+        margin-bottom: 50px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .comicListSection {
+        .comicsList {
+            grid-template-columns: repeat(auto-fill, 180px);
+            gap: 35px 55px;
+            &__item {
+                img {
+                    width: 180px;
+                }
+        }
+    }
+}
+}
+
+@media (max-width: 768px) {
+    .comicListSection {
+        .comicsList {
+            grid-template-columns: repeat(auto-fill, 130px);
+            gap: 35px 25x;
+            &__item {
+                img {
+                    width: 130px;
+                }
+            }
+        }
+    }
+}
+
+
+@media  (max-width: 576px) {
+    .comicListSection {
+        .comicsList {
+            grid-template-columns: repeat(auto-fill, 130px);
+            gap: 35px 25x;
+            justify-content: center;
+
+            &__item {
+                img {
+                    width: 130px;
+                }
+            }
+        }
+    }
+    
+}

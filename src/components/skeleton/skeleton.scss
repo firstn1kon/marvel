@@ -1,0 +1,37 @@
+.skeleton {
+    animation: sekelton 2s infinite;
+    &__circleLine {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 33px;
+
+    }
+    &__circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        background: #c4c4c4;
+        flex-shrink: 0;
+
+    }
+    &__line {
+        height: 16px;
+        width: 100%;
+        background: #c4c4c4;
+
+        &_solid {
+            height: 36px;
+            margin-bottom: 15px;
+            &:nth-child(2) {
+                margin-top: 15px;
+            }
+        }
+
+
+    }
+}
+
+.skeleton__line .skeleton__line_solid:first-child {
+    display: none;
+}
