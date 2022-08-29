@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useEffect, useState} from 'react';
 import MarvelApi from '../services/marvelAPI';
 
 import './chooseCharacter.scss';
@@ -9,112 +9,109 @@ import CharInfo from '../charInfo/charInfo';
 import ErrorBoundaries from '../errorBoundaries/errorBoundaries';
 
 
-class CharList extends Component {
-    state = {
-        char: [],
-        loading: true,
-        error: false,
-        offSet: 210, 
-        selectedChar: null,
-        btnLoad: false,
-        end: false,
-    }
+const CharList = () => {
+
+    const [char, setChar] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
+    const [offSet, setOffset] = useState(210);
+    const [selectedChar, setSelectedChar] = useState(null);
+    const [btnLoad, setBtnLoad] = useState(false);
+    const [end, setEnd] = useState(false);
+
 
     
 
-    marvelAPI = new MarvelApi();
+    const marvelAPI = new MarvelApi();
 
-    componentDidMount() {
-        this.loadComiclist();
-        // window.addEventListener('scroll', this.lazyLoad)
-    }
 
-    componentWillUnmount() {
-        // window.removeEventListener('scroll', this.lazyLoad)
-    }
+    useEffect(()=> {
+        loadComiclist();
+    },[]);
+
+    useEffect(()=> {
+        window.addEventListener('scroll', lazyLoad);
+        return () => {
+            window.removeEventListener('scroll', lazyLoad);
+
+        }
+    },[offSet]);
+
+
+
 
     
-    loadComiclist = (offset) => {
-        this.setState({
-            btnLoad: true,
-            error: false,
-        })
-        this.marvelAPI.getAllCharacters(offset)
+    const loadComiclist = (offset) => {
+        setBtnLoad(true);
+        setError(false);
+        marvelAPI.getAllCharacters(offset)
         .then(newChar => {
             let end = false;
             if (newChar.length < 9) {
                 end = true
             }
-            this.setState(({char, offSet}) => 
-              (  {
-                    char: [...char, ...newChar],
-                    loading: false,
-                    offSet: offSet + 9,
-                    btnLoad: false,
-                    end: end,
-            }))
+            setChar(char => [...char, ...newChar]);
+            setLoading(false);
+            setOffset(offset => offset + 9);
+            setBtnLoad(false);
+            setEnd(end);
         }
         )
         .catch(()=> {
-            this.setState({
-                error: true,
-                loading: false,
-                btnLoad: false,
-            })
+            setError(true);
+            setLoading(false);
+            setBtnLoad(false);
         })
     }
 
-    onSelectedChar = (id) => {
-        this.setState({
-            selectedChar: id,
-        })
+    const onSelectedChar = (id) => {
+        setSelectedChar(id);
+
     }
-    lazyLoad = () => {
+    const lazyLoad = () => {
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-            this.loadComiclist(this.state.offSet);
+            loadComiclist(offSet);
         }
     }
-/* 
-    Реализация через рефы фокуса карточек и класса активности
-    cardsRefs = [];
 
-    setCardRef = (card) => {
-        this.cardsRefs.push(card)
-    }
-
-    onFocusCard = (card) => {
-        this.cardsRefs.forEach(item => {
+/*     // Реализация через рефы фокуса карточек и класса активности
+    const cardsRefs = useRef([]);
+    const onFocusCard = (card) => {
+        cardsRefs.current.forEach(item => {
             item.classList.remove('active');
-            
         });
-        this.cardsRefs[card].classList.add('active');
-        this.cardsRefs[card].focus();
-    } */
+        cardsRefs.current[card].classList.add('active');
+        cardsRefs.current[card].focus();
+    }  */
+    
+
  
 
 
-    renderListItems = (items) => {
+    const renderListItems = (items) => {
         const listItems = items.map(({name, thumbnail, id}, i) => {
             const noFound = thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" ? {objectFit: "fill"} : null;
-            const active = this.state.selectedChar === id ? " active" : "";
+            const active = selectedChar === id ? " active" : "";
             return (
                 <div 
                 className={`chooseCharacter__item ${active}`} 
                 tabIndex={0} 
                 key={id}
-                /* для рефов ref={this.setCardRef} */
+                /* Для рефов 
+                ref={(ref) => cardsRefs.current[i] = ref} */
                 onKeyPress={(e) => {
                     e.preventDefault();
                    if (e.key === "Enter" || e.key === " ") {
-                    this.onSelectedChar(id);
+                    onSelectedChar(id);
                    /*  для рефов 
-                    this.onFocusCard(i) */
+                    onFocusCard(i) */
                    }
                 }} 
-                onClick={()=>{this.onSelectedChar(id); 
-                    /* для рефов
-                    this.onFocusCard(i); */}}
-                /* onFocus={()=>this.onSelectedChar(id)} */
+                onClick={()=>{onSelectedChar(id); 
+                    
+                    /* для рефов 
+                    onFocusCard(i); */}}
+                /* onFocus={()=>onSelectedChar(id)} */
                 >
                     <div className="chooseCharacter__item-img"><img src={thumbnail} alt={name} style={noFound}/></div>
                     <h2>{name}</h2>
@@ -126,12 +123,10 @@ class CharList extends Component {
 
 
 
-    render() {
 
 
 
-        const {char, error, loading, selectedChar, btnLoad, end} = this.state,
-              listItems = this.renderListItems(char),
+        const listItems = renderListItems(char),
               onError = error ? <Error/> : null,
               onLoading = loading ? <Spinner/> : null,
               onContent = !(loading || error) ? listItems : null,
@@ -149,7 +144,7 @@ class CharList extends Component {
                         {onError}
                         {onLoading}
                         
-                        <button disabled={btnLoad} href="#" className="button button__load rotable" style={dNone} onClick={(e) => {e.preventDefault(); this.loadComiclist(this.state.offSet);}}>LOAD MORE</button>
+                        <button disabled={btnLoad} href="#" className="button button__load rotable" style={dNone} onClick={(e) => {e.preventDefault(); loadComiclist(offSet);}}>LOAD MORE</button>
                         {/* {<div style={{margin: '0 auto', visibility: visibility}}><Spinner/></div>} */}
                         
                     </div>
@@ -160,7 +155,6 @@ class CharList extends Component {
             </div>
         </section>
           );
-    }
 }
 
 export default CharList;

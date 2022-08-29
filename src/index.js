@@ -5,9 +5,9 @@ import App from './components/app/app';
 
 import './style/style.scss';
 
-import MarvelApi from './components/services/marvelAPI';
+// import MarvelApi from './components/services/marvelAPI';
 
-const marvelApi = new MarvelApi();
+// const marvelApi = new MarvelApi();
 
 // marvelApi.getAllCharacters().then(res => res.data.results.forEach(({id, name}) => console.log(id, name)));
 // marvelApi.getCharacter(1011196).then(res => console.log(res));

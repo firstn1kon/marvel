@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import Spinner from '../spinner/spinner';
 import Error from '../error/error';
 import MarvelApi from '../services/marvelAPI';
@@ -6,43 +6,41 @@ import MarvelApi from '../services/marvelAPI';
 import './_randomCharacter.scss';
 import hummerAndShield from '../../resources/img/hummer_and_shield.png';
 
-class RandomCharacter extends Component {
-    state = {
-        char: {},
-        loading: true,
-        error: false,
-    }
+const RandomCharacter = () => {
 
-    marvelApi = new MarvelApi();
+    const [char, setChar] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
-    componentDidMount() {
-        this.updateChar();
-    }
 
-    updateChar = () => {
-        this.setState({
-            loading: true,
-            error: false,
-        })
+
+    const marvelApi = new MarvelApi();
+
+ 
+    useEffect(()=> {
+        updateChar();
+    },[]);
+
+
+    const updateChar = () => {
+        setLoading(true);
+        setError(false);
         const id = Math.floor(Math.random() * (1011400 - 1011000)) + 1011000;
-        this.marvelApi.getCharacter(id)
+        marvelApi.getCharacter(id)
         .then(char => {
-            this.setState({char,
-                loading: false,
-            });
+            setChar(char);
+            setLoading(false);
         } )
         .catch(() => {
-            this.setState({
-                error: true,
-                loading: false,
-            })
+            setError(true);
+            setLoading(false)
         } )
     }
 
 
-  render () {
+  
 
-    const {char, loading, error} = this.state;
+    
     const onError = error? <Error /> : null,
           onLoading = loading? <Spinner/> : null,
           onContent = !(error || loading)? <ViewCharacter char={char}/> : null;
@@ -60,7 +58,7 @@ class RandomCharacter extends Component {
                             <p className="randomCharacter__title">Random character for today!<br/>
                                 Do you want to get to know him better?</p>
                             <p className="randomCharacter__title">Or choose another one</p>
-                            <a href="" className="button button__bg-dark-grey" onClick={(e) => {e.preventDefault(); this.updateChar();}}>TRY IT</a>
+                            <a href="" className="button button__bg-dark-grey" onClick={(e) => {e.preventDefault(); updateChar();}}>TRY IT</a>
                             <img src={hummerAndShield} alt="" className="randomCharacter__bgImg"/>
                         </div>
                     </div>
@@ -69,7 +67,7 @@ class RandomCharacter extends Component {
         </div>
       );
       
-    }
+
   }
 
   const ViewCharacter = ({char}) => {

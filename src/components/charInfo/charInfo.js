@@ -1,78 +1,60 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import Proptypes from 'prop-types';
 import MarvelApi from '../services/marvelAPI';
 
 import Skeleton from '../skeleton/skeleton';
 import Error from '../error/error';
 
-class CharInfo extends Component {
+const CharInfo = (props) => {
 
 
-  marvelAPI = new MarvelApi();
-  
-  state = {
-    char: {},
-    loading: true,
-    error: false,
-  }
+  const marvelAPI = new MarvelApi();
+  const [char, setChar] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  componentDidMount() {
-    this.loadSelectedChar();
-  }
+  useEffect(() => {
+    loadSelectedChar();
+  },[])
 
-  componentDidUpdate(prevProps) {
+  useEffect(() => {
+    loadSelectedChar();
+  },[props.selectedChar])
 
-    if(this.props.selectedChar !== prevProps.selectedChar) {
-      this.loadSelectedChar();
-    }
-  }
-
-
-  loadSelectedChar = () => {
-    if(!this.props.selectedChar) {
+  const loadSelectedChar = () => {
+    if(!props.selectedChar) {
       return;
     }
-    this.setState({
-      loading: true,
-      error: false,
-    })
 
-    this.marvelAPI.getCharacter(this.props.selectedChar)
+    setLoading(true);
+    setError(false);
+
+
+    marvelAPI.getCharacter(props.selectedChar)
     .then(char => {
-      this.setState({
-        char,
-        loading: false,
-      })
+      setChar(char);
+      setLoading(false);
     })
     .catch(()=> {
-      this.setState({
-        error: true,
-        loading: false,
-      })
+      setError(true);
+      setLoading(false);
     })
     
 }
 
-  render() {
-    const {char, error, loading} = this.state,
-      onError = error ? <Error/> : null,
+
+    const onError = error ? <Error/> : null,
       onLoading = loading ? <Skeleton/> : null,
       onContent = !(loading || error) ? <View char={char}/> : null;
-   
-
-
     
     return (
-
       <div className="chooseCharacter__currentItem">
         {onError}
         {onLoading}
         {onContent}
       </div>
-  
-  
     );
-  }
+  
   
 }
 
