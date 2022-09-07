@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Spinner from '../spinner/spinner';
 import Error from '../error/error';
-import MarvelApi from '../services/marvelAPI';
+import useMarvelApi from '../services/marvelAPI';
 
 import './_randomCharacter.scss';
 import hummerAndShield from '../../resources/img/hummer_and_shield.png';
@@ -9,12 +9,7 @@ import hummerAndShield from '../../resources/img/hummer_and_shield.png';
 const RandomCharacter = () => {
 
     const [char, setChar] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
-
-
-
-    const marvelApi = new MarvelApi();
+    const {loading, error, getCharacter} = useMarvelApi();
 
  
     useEffect(()=> {
@@ -23,18 +18,14 @@ const RandomCharacter = () => {
 
 
     const updateChar = () => {
-        setLoading(true);
-        setError(false);
+
         const id = Math.floor(Math.random() * (1011400 - 1011000)) + 1011000;
-        marvelApi.getCharacter(id)
+        getCharacter(id)
         .then(char => {
             setChar(char);
-            setLoading(false);
         } )
-        .catch(() => {
-            setError(true);
-            setLoading(false)
-        } )
+
+
     }
 
 
@@ -71,7 +62,7 @@ const RandomCharacter = () => {
   }
 
   const ViewCharacter = ({char}) => {
-    const {thumbnail, name, description, homepage, wiki} = char;
+    const {thumbnail, name, description = "0", homepage, wiki} = char;
     const noFound = thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" ? {objectFit: "contain"} : null;
     return (
         <div className="randomCharacter__character">

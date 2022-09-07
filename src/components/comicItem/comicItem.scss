@@ -32,6 +32,16 @@
         font-size: 18px;
         line-height: 21px;
         cursor: pointer;
+        a {
+            color: #000;
+            text-decoration: none;
+            &:hover {
+                color: $color-red;
+                text-decoration: none;
+
+            }
+            
+        }
     }
     p {
         font-weight: 400;

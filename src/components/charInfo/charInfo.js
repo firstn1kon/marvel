@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Proptypes from 'prop-types';
-import MarvelApi from '../services/marvelAPI';
+import useMarvelApi from '../services/marvelAPI';
 
 import Skeleton from '../skeleton/skeleton';
 import Error from '../error/error';
@@ -8,10 +8,8 @@ import Error from '../error/error';
 const CharInfo = (props) => {
 
 
-  const marvelAPI = new MarvelApi();
-  const [char, setChar] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [char, setChar] = useState([]);
+  const {loading, error, getCharacter} = useMarvelApi();
 
   useEffect(() => {
     loadSelectedChar();
@@ -25,23 +23,13 @@ const CharInfo = (props) => {
     if(!props.selectedChar) {
       return;
     }
-
-    setLoading(true);
-    setError(false);
-
-
-    marvelAPI.getCharacter(props.selectedChar)
+    getCharacter(props.selectedChar)
     .then(char => {
       setChar(char);
-      setLoading(false);
-    })
-    .catch(()=> {
-      setError(true);
-      setLoading(false);
+      
     })
     
 }
-
 
     const onError = error ? <Error/> : null,
       onLoading = loading ? <Skeleton/> : null,
@@ -59,18 +47,13 @@ const CharInfo = (props) => {
 }
 
 const View = ({char}) => {
-  
   const {thumbnail, name, description, homepage, wiki, comics} = char;
   const noFound = thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" ? {objectFit: "fill"} : null;
-
   const comicsList = comics.map(({name,resourceURI}, i) => {
-          return (
-            <li key={i}><a href={resourceURI}>{name}</a></li>
-          )
-        })
-
-        ;
-        
+    return (
+      <li key={i}><a href={resourceURI}>{name}</a></li>
+    )
+  });
   return(
     <>
       <div className="chooseCharacter__nav">
@@ -85,15 +68,11 @@ const View = ({char}) => {
       <h2>Comics:</h2>
       <ul>
         {comicsList.length === 0 ? "no comics avaliable for this character" : comicsList}
-
       </ul>
-  
   </>
   )
 
 }
-
-
 
 CharInfo.propTypes = {
   selectedChar: Proptypes.number,

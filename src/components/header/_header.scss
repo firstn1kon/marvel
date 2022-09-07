@@ -12,7 +12,9 @@
         font-size: 28px;
         line-height: 33px;
         span {
-            color: $color-red;
+            a {
+                color: $color-red;
+            }
         }
     }
     &__nav {

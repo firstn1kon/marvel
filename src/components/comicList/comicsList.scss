@@ -8,10 +8,12 @@
         &__item {
             img {
                 width: 225px;
-                object-fit: cover;
+                height: 346px;
+                object-fit: fill;
                 filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.25));
             }
             p {
+                min-height: 30px;
                 font-weight: 700;
                 font-size: 14px;
                 line-height: 16px;
@@ -26,7 +28,12 @@
             color: rgba(0, 0, 0, 0.6);
         }
         a {
-            display: none;
+            color: #000;
+            text-decoration: none;
+            &:hover {
+                color: #9F0013;
+                transform: translateY(-10px);
+            }
         }
     
     

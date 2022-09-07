@@ -1,26 +1,61 @@
+import { Link, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import useMarvelApi from '../services/marvelAPI';
+import Spinner from '../spinner/spinner';
+import Error from '../error/error';
 import './comicItem.scss';
 
-import xmenComics from '../../resources/img/x-men-comics.png';
 
 
 
 function ComicItem() {
+    const {comicID} = useParams();
+    const [comic, setComic] = useState();
+    const {loading, error, getComic} = useMarvelApi();
+
+    const loadComic = () => {
+        getComic(comicID).then(data => {
+            setComic(data);
+        })
+    }
+    useEffect(()=> {
+        loadComic();
+
+    },[comicID])
+
+    const renderComic = (comic) => {
+        if(comic) {
+            const {description, lang, pagecount, price, thumbnail, title} = comic;
+            return (
+                <div className="comicItem__wrapper">
+                <div className="comicItem__img"><img src={thumbnail} alt={title}/></div>
+                <div className="comicItem__info">
+                    <div className="comicItem__header">
+                        <div className="comicItem__title">{title}</div>
+                        <div className="comicItem__back"><Link to="/comics">Back to all</Link></div>
+                    </div>
+                    <p>{description}</p>
+                    <div className="comicItem__pages">{pagecount} pages</div>
+                    <div className="comicItem__lang">Language: {lang}</div>
+                    <div className="comicItem__price">{price}$</div>
+                </div>
+            </div>
+            )
+        }
+
+    }
+    const content = renderComic(comic);
+    const onLoading = loading? <Spinner/> : null;
+    const onError = error? <Error/> : null;
+    const onContent = !(loading && error)? content: null;
   return (
     <section className="comicItem">
     <div className="container">
-        <div className="comicItem__wrapper">
-            <div className="comicItem__img"><img src={xmenComics} alt="x-men"/></div>
-            <div className="comicItem__info">
-                <div className="comicItem__header">
-                    <div className="comicItem__title">X-Men: Days of Future Past</div>
-                    <div className="comicItem__back">Back to all</div>
-                </div>
-                <p>Re-live the legendary first journey into the dystopian future of 2013 - where Sentinels stalk the Earth, and the X-Men are humanity's only hope...until they die! Also featuring the first appearance of Alpha Flight, the return of the Wendigo, the history of the X-Men from Cyclops himself...and a demon for Christmas!?</p>
-                <div className="comicItem__pages">144 pages</div>
-                <div className="comicItem__lang">Language: en-us</div>
-                <div className="comicItem__price">9.99$</div>
-            </div>
-        </div>
+        {onLoading}
+        {onError}
+        {onContent}
+
 
     </div>
 </section>
