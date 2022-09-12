@@ -1,6 +1,6 @@
 import error from "../error/systemerror_94180.svg"
 
-export function Error404() {
+function Error404() {
 
     return (
     
@@ -18,4 +18,6 @@ export function Error404() {
 
     )
 }
+
+export default Error404
 

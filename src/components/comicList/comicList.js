@@ -28,8 +28,9 @@ function ComicList() {
 
     useEffect(() => {
         loadComics();
-        
     }, [])
+
+
 
     const renderComics = (comics) => {
         const comicsList = comics.map(({id, thumbnail, title, price}, i) => {

@@ -1,10 +1,11 @@
 import Header from "../header/header";
+import { useEffect } from "react";
+import { lazy , Suspense} from "react";
 
-import { MainPage, Comics, Error404, Comic} from "../pages";
-
-
-
+import { MainPage, Comics, Comic} from "../pages";
 import { BrowserRouter, Routes, Route} from "react-router-dom";
+
+const Error404 = lazy(() => import('../pages/error404'));
 
 // import Banner from "../banner/banner";
 // import ComicItem from "../comicItem/comicItem";
@@ -12,9 +13,14 @@ import { BrowserRouter, Routes, Route} from "react-router-dom";
 
 
 function App() {
+  useEffect(()=> {
+    document.title = "Marvel App"
+
+  })
   return (
     <BrowserRouter>
-        <div className="App">
+      <Suspense fallback={<span>loading ...</span>}>
+      <div className="App">
           <Header/>
           <main className="main">
             <Routes>
@@ -29,6 +35,9 @@ function App() {
           {/* <ComicItem/> */}
           {/* <CharacterItem/>  */}
         </div>
+        
+      </Suspense>
+
     </BrowserRouter>
   );
 }

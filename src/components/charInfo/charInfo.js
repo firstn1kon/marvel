@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import Proptypes from 'prop-types';
 import useMarvelApi from '../services/marvelAPI';
 
+import { Link } from 'react-router-dom';
+
 import Skeleton from '../skeleton/skeleton';
 import Error from '../error/error';
 
@@ -50,8 +52,9 @@ const View = ({char}) => {
   const {thumbnail, name, description, homepage, wiki, comics} = char;
   const noFound = thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" ? {objectFit: "fill"} : null;
   const comicsList = comics.map(({name,resourceURI}, i) => {
+    const comicUrl = resourceURI.replace(/(v1)|([^\d])/g, "");
     return (
-      <li key={i}><a href={resourceURI}>{name}</a></li>
+      <li key={i}><Link to={`comics/${comicUrl}`}>{name}</Link></li>
     )
   });
   return(
