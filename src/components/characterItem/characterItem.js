@@ -1,23 +1,73 @@
+import { useState, useEffect } from 'react';
+import {useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+
+import useMarvelApi from '../services/marvelAPI';
+
+import Error from '../error/Error';
+import Spinner from '../spinner/spinner';
+import Banner from '../banner/Banner';
+
 import './characterItem.scss';
 
-import loki from '../../resources/img/loki.png';
 
 function CharacterItem() {
+  const [character, setCharacter] = useState([]);
+  const {loading, error, getCharacter} = useMarvelApi();
+  const {characterID} = useParams();
+
+  useEffect(() => {
+    loadSelectedChar();
+    document.title = "Marvel"
+  },[])
+
+  useEffect(() => {
+    loadSelectedChar();
+  },[characterID])
+
+  const loadSelectedChar = () => {
+    if(!characterID) {
+      return;
+    }
+    getCharacter(characterID)
+    .then(char => {
+      setCharacter(char);
+    })
+    
+}
+const onError = error ? <Error/> : null,
+onLoading = loading ? <Spinner/> : null,
+onContent = !(loading || error) ? <View char={character}/> : null;
   return (
-    <section className="characterItem">
+    <>
+      <Banner/>
+      <section className="characterItem">
         <div className="container">
-            <div className="characterItem__wrapper">
-                <img src={loki} alt="loki"/>
-                <div className="characterItem__info">
-                    <h2>LOKI</h2>
-                    <p>In Norse mythology, Loki is a god or jötunn (or both). Loki is the son of Fárbauti and Laufey, and the brother of Helblindi and Býleistr. By the jötunn Angrboða, Loki is the father of Hel, the wolf Fenrir, and the world serpent Jörmungandr. By Sigyn, Loki is the father of Nari and/or Narfi and with the stallion Svaðilfari as the father, Loki gave birth—in the form of a mare—to the eight-legged horse Sleipnir. In addition, Loki is referred to as the father of Váli in the Prose Edda.</p>
-                </div>
+          {onError}
+          {onLoading}
+          {onContent}
+        </div>
+      </section>
+    </>
+  );
+}
+
+const View = ({char}) => {
+  const {thumbnail, name, description} = char;
+  const noFound = thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" ? {objectFit: "fill"} : null;
+  return (
+        <div className="characterItem__wrapper">
+            <Helmet>
+              <meta name="description" content={`${name} - character page`}/>
+              <title>{`${name}  - Marvel character`}</title>
+            </Helmet>
+            <img src={thumbnail} alt={name} style={noFound}/>
+            <div className="characterItem__info">
+                <h2>{name}</h2>
+                <p>{description}</p>
             </div>
         </div>
-    </section>
-    
-
-  );
+  )
 }
 
 export default CharacterItem;

@@ -1,4 +1,5 @@
-import ComicItem from "../comicItem/comicItem";
+import ComicItem from "../comicItem/ComicItem";
+
 export const Comic = () => {
     return (
         <ComicItem></ComicItem>

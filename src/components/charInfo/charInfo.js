@@ -1,21 +1,14 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Proptypes from 'prop-types';
 import useMarvelApi from '../services/marvelAPI';
 
-import { Link } from 'react-router-dom';
-
 import Skeleton from '../skeleton/skeleton';
-import Error from '../error/error';
+import Error from '../error/Error';
 
 const CharInfo = (props) => {
-
-
-  const [char, setChar] = useState([]);
+  const [char, setChar] = useState(false);
   const {loading, error, getCharacter} = useMarvelApi();
-
-  useEffect(() => {
-    loadSelectedChar();
-  },[])
 
   useEffect(() => {
     loadSelectedChar();
@@ -28,10 +21,8 @@ const CharInfo = (props) => {
     getCharacter(props.selectedChar)
     .then(char => {
       setChar(char);
-      
     })
-    
-}
+  }
 
     const onError = error ? <Error/> : null,
       onLoading = loading ? <Skeleton/> : null,
@@ -44,11 +35,12 @@ const CharInfo = (props) => {
         {onContent}
       </div>
     );
-  
-  
 }
 
 const View = ({char}) => {
+  if(char === false) {
+    return <Skeleton/>
+  }
   const {thumbnail, name, description, homepage, wiki, comics} = char;
   const noFound = thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" ? {objectFit: "fill"} : null;
   const comicsList = comics.map(({name,resourceURI}, i) => {
@@ -58,7 +50,7 @@ const View = ({char}) => {
     )
   });
   return(
-    <>
+    <div style={{animation: `fadeIn .7s`}}>
       <div className="chooseCharacter__nav">
         <img src={thumbnail} alt={name} style={noFound}/>
         <div className="chooseCharacter__info">
@@ -72,9 +64,8 @@ const View = ({char}) => {
       <ul>
         {comicsList.length === 0 ? "no comics avaliable for this character" : comicsList}
       </ul>
-  </>
+  </div>
   )
-
 }
 
 CharInfo.propTypes = {

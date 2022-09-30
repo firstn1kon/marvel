@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link} from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 import useMarvelApi from '../services/marvelAPI';
 
 import Spinner from '../spinner/spinner';
-import Error from '../error/error';
-import Banner from "../banner/banner";
+import Error from '../error/Error';
+import Banner from "../banner/Banner";
 
 import './comicsList.scss';
-
 
 function ComicList() {
     const [comics, setComics] = useState([]);
@@ -30,20 +30,16 @@ function ComicList() {
         loadComics();
     }, [])
 
-
-
     const renderComics = (comics) => {
         const comicsList = comics.map(({id, thumbnail, title, price}, i) => {
             return (
                 <Link to={`/comics/${id}`} key={`${id}${i}`}>
-                <div className="comicsList__item">
+                <div className="comicsList__item" style={{animation: `charList .7s`}}>
                     <img src={thumbnail} alt={title}/>
                     <p>{title}</p>
                     <div className="comicsList__price">{price}$</div>
                 </div>
                 </Link>
-         
-                
             )
         })
         return (
@@ -56,24 +52,25 @@ function ComicList() {
     const onError = error? <Error/> : null;
     const buttonNone = end? {display: "none"} : null;
 
-
   return (
     <>
+    <Helmet>
+        <meta name="description" content="Comics marvel page"/>
+        <title>Comics of Marvel</title>
+    </Helmet>
     <Banner/>
     <section className="comicListSection">
-
         <div className="container">
-        {onLoading}
+        
         {onError}
             <div className="comicsList">
                 {comicsList}
             </div>
             <button  style={buttonNone} disabled={loading} className="button button__load" onClick={(e) => {e.preventDefault(); loadComics(offset)}}>LOAD MORE</button>
+            {onLoading}
         </div>
     </section>
     </>
-
-
   );
 }
 

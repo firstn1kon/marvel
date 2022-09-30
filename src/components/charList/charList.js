@@ -1,12 +1,13 @@
 import { useEffect, useState} from 'react';
 import useMarvelApi from '../services/marvelAPI';
 
-import './chooseCharacter.scss';
-
 import Spinner from '../spinner/spinner';
-import Error from '../error/error';
-import CharInfo from '../charInfo/charInfo';
-import ErrorBoundaries from '../errorBoundaries/errorBoundaries';
+import Error from '../error/Error';
+import CharInfo from '../charInfo/CharInfo';
+import ErrorBoundaries from '../errorBoundaries/ErrorBoundaries';
+import FindCharacterForm from '../findCharacterForm/FindCharacterForm';
+
+import './chooseCharacter.scss';
 
 
 const CharList = () => {
@@ -20,7 +21,7 @@ const CharList = () => {
     useEffect(()=> {
             loadComiclist();
     },[]);
-
+    // Для LazyLoad
     // useEffect(()=> {
     //     window.addEventListener('scroll', lazyLoad);
     //     return () => {
@@ -47,11 +48,12 @@ const CharList = () => {
         setSelectedChar(id);
 
     }
-    const lazyLoad = () => {
-        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-            loadComiclist(offSet);
-        }
-    }
+    // Для LazyLoad
+    // const lazyLoad = () => {
+    //     if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+    //         loadComiclist(offSet);
+    //     }
+    // }
 
 /*     // Реализация через рефы фокуса карточек и класса активности
     const cardsRefs = useRef([]);
@@ -72,6 +74,7 @@ const CharList = () => {
                     className={`chooseCharacter__item ${active}`} 
                     tabIndex={0} 
                     key={id}
+                    style={{animation: `charList .7s`}}
                     /* Для рефов 
                     ref={(ref) => cardsRefs.current[i] = ref} */
                     onKeyPress={(e) => {
@@ -102,20 +105,21 @@ const CharList = () => {
 
         return (
             <section className="chooseCharacter">
-            <div className="container">
-                <div className="chooseCharacter__wrapper" style={{position: 'relative'}}>
-                    <div className="chooseCharacter__list" >
-                        {listItems}
-                        {onError}
-                        <button disabled={loading} href="#"  style={dNone} className="button button__load rotable"  onClick={(e) => {e.preventDefault(); loadComiclist(offSet);}}>LOAD MORE</button>
-                        <div style={{position: 'absolute', bottom: "-220px", left: '50%', transform: 'translateX(-50%)', visibility: onLoading}}><Spinner/></div>
-                    </div>
-                    <div className="chooseCharacter__rightBlock">
-                        <ErrorBoundaries><CharInfo selectedChar={selectedChar}/></ErrorBoundaries>
+                <div className="container">
+                    <div className="chooseCharacter__wrapper" style={{position: 'relative'}}>
+                        <div className="chooseCharacter__list" >
+                            {listItems}
+                            {onError}
+                            <button disabled={loading} href="#"  style={dNone} className="button button__load rotable"  onClick={(e) => {e.preventDefault(); loadComiclist(offSet);}}>LOAD MORE</button>
+                            <div style={{position: 'absolute', bottom: "-220px", left: '50%', transform: 'translateX(-50%)', visibility: onLoading}}><Spinner/></div>
+                        </div>
+                        <div className="chooseCharacter__rightBlock">
+                            <ErrorBoundaries><CharInfo selectedChar={selectedChar}/></ErrorBoundaries>
+                            <FindCharacterForm/>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
           );
 }
 

@@ -57,6 +57,10 @@
         width: 170px;
         margin: 0 auto;
     }
+    &__search {
+        width: 0;
+        min-width: 101px;
+    }
     &:disabled {
         filter: grayscale(.7)
     }

@@ -1,43 +1,34 @@
 import { useEffect, useState } from 'react';
+
 import Spinner from '../spinner/spinner';
-import Error from '../error/error';
+import Error from '../error/Error';
 import useMarvelApi from '../services/marvelAPI';
 
-import './_randomCharacter.scss';
 import hummerAndShield from '../../resources/img/hummer_and_shield.png';
+import './randomCharacter.scss';
 
 const RandomCharacter = () => {
 
     const [char, setChar] = useState({});
     const {loading, error, getCharacter} = useMarvelApi();
-
  
     useEffect(()=> {
         updateChar();
     },[]);
 
-
     const updateChar = () => {
-
         const id = Math.floor(Math.random() * (1011400 - 1011000)) + 1011000;
         getCharacter(id)
         .then(char => {
             setChar(char);
         } )
-
-
     }
-
-
-  
-
     
     const onError = error? <Error /> : null,
           onLoading = loading? <Spinner/> : null,
           onContent = !(error || loading)? <ViewCharacter char={char}/> : null;
          
     return (
-        
         <div>
             <section className="randomCharacter">
                 <div className="container">
@@ -80,6 +71,5 @@ const RandomCharacter = () => {
         </div>
         )
     } 
-
   
 export default RandomCharacter;

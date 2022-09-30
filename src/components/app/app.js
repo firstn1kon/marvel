@@ -1,22 +1,12 @@
+import {lazy , Suspense} from "react";
+import {BrowserRouter, Routes, Route}from "react-router-dom";
+
+import { MainPage, Comics, Comic, Character} from "../pages";
 import Header from "../header/header";
-import { useEffect } from "react";
-import { lazy , Suspense} from "react";
 
-import { MainPage, Comics, Comic} from "../pages";
-import { BrowserRouter, Routes, Route} from "react-router-dom";
-
-const Error404 = lazy(() => import('../pages/error404'));
-
-// import Banner from "../banner/banner";
-// import ComicItem from "../comicItem/comicItem";
-// import CharacterItem from "../characterItem/characterItem";
-
+const Error404 = lazy(() => import('../pages/Error404'));
 
 function App() {
-  useEffect(()=> {
-    document.title = "Marvel App"
-
-  })
   return (
     <BrowserRouter>
       <Suspense fallback={<span>loading ...</span>}>
@@ -28,16 +18,12 @@ function App() {
               <Route path="comics" element={<Comics/>}>
                 <Route path=":comicID" element={<Comic/>}/>
               </Route>
+              <Route path="/character/:characterID" element={<Character/>}/>
               <Route path="*" element={<Error404/>} />
             </Routes>
           </main>
-          {/* <Banner/> */}
-          {/* <ComicItem/> */}
-          {/* <CharacterItem/>  */}
         </div>
-        
       </Suspense>
-
     </BrowserRouter>
   );
 }
