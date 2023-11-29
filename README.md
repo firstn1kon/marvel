@@ -1,6 +1,6 @@
 # Проект по героям Marvel
 
-![image](https://github.com/marvel/blob/main/src/resources/img/hulk.png)
+![image](https://github.com/firstn1kon/marvel/blob/main/src/resources/img/marvel.png)
 SPA приложение с полной функциональностью:
 - отображение списка героев и комиксов
 - роутинг приложения
