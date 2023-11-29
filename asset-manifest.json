@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/marvel/static/css/main.94f869f2.css",
+    "main.js": "/marvel/static/js/main.a31af6f5.js",
+    "static/js/339.35f96e95.chunk.js": "/marvel/static/js/339.35f96e95.chunk.js",
+    "static/media/vision.png": "/marvel/static/media/vision.60047fe2b17c28e55711.png",
+    "static/media/avengers.png": "/marvel/static/media/avengers.e263a66dff2c7d6edabd.png",
+    "static/media/hummer_and_shield.png": "/marvel/static/media/hummer_and_shield.46fb630523fc058d9fe9.png",
+    "static/media/avengers-logo.png": "/marvel/static/media/avengers-logo.cff08e83711a637673a9.png",
+    "static/media/search-icon.svg": "/marvel/static/media/search-icon.53ae7ef63f4121f6d9ba.svg",
+    "index.html": "/marvel/index.html",
+    "static/media/systemerror_94180.svg": "/marvel/static/media/systemerror_94180.5c0996727b1116b17bf72db7f8f2893e.svg",
+    "main.94f869f2.css.map": "/marvel/static/css/main.94f869f2.css.map",
+    "main.a31af6f5.js.map": "/marvel/static/js/main.a31af6f5.js.map",
+    "339.35f96e95.chunk.js.map": "/marvel/static/js/339.35f96e95.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.94f869f2.css",
+    "static/js/main.a31af6f5.js"
+  ]
+}
