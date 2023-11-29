@@ -65,4 +65,12 @@
         margin-top: 10px;
         
     }
+    &__overlay {
+        width: 100vw; 
+        height: 100vh; 
+        background: rgba(0, 0, 0, 0.413);
+        position: fixed; 
+        top: 0; 
+        z-index: 9
+    }
 }

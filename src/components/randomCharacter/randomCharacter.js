@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Spinner from '../spinner/spinner';
 import Error from '../error/Error';
 import useMarvelApi from '../services/marvelAPI';
+import ViewCharacter from './ViewCharacter';
 
 import hummerAndShield from '../../resources/img/hummer_and_shield.png';
 import './randomCharacter.scss';
@@ -14,6 +15,7 @@ const RandomCharacter = () => {
  
     useEffect(()=> {
         updateChar();
+    //eslint-disable-next-line
     },[]);
 
     const updateChar = () => {
@@ -40,7 +42,7 @@ const RandomCharacter = () => {
                             <p className="randomCharacter__title">Random character for today!<br/>
                                 Do you want to get to know him better?</p>
                             <p className="randomCharacter__title">Or choose another one</p>
-                            <a href="" className="button button__bg-dark-grey" onClick={(e) => {e.preventDefault(); updateChar();}}>TRY IT</a>
+                            <button className="button button__bg-dark-grey" onClick={updateChar}>TRY IT</button>
                             <img src={hummerAndShield} alt="" className="randomCharacter__bgImg"/>
                         </div>
                     </div>
@@ -48,28 +50,6 @@ const RandomCharacter = () => {
             </section>
         </div>
       );
-      
-
   }
-
-  const ViewCharacter = ({char}) => {
-    const {thumbnail, name, description = "0", homepage, wiki} = char;
-    const noFound = thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" ? {objectFit: "contain"} : null;
-    return (
-        <div className="randomCharacter__character">
-            <div className="randomCharacter__img">
-                <img src={thumbnail} alt={name} style={noFound}/>
-            </div>
-            <div className="randomCharacter__info">
-                <h2 className="randomCharacter__name">{name}</h2>
-                <p className="randomCharacter__descr">{description.length > 200 ? `${description.slice(0, 200)}...` : description }</p>
-                <div className="randomCharacter__btns">
-                    <a href={homepage} className="button" >HOMEPAGE</a>
-                    <a href={wiki} className="button button__grey">WIKI</a>
-                </div>
-            </div>
-        </div>
-        )
-    } 
   
 export default RandomCharacter;

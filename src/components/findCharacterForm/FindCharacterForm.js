@@ -8,7 +8,7 @@ import "./findCharacterForm.scss";
 
 const FindCharacterForm = () => {
     const {loading, error, getCharacterbyName} = useMarvelApi();
-    const [data, setData] = useState();
+    const [data, setData] = useState([]);
     const [input, setInput] = useState('');
     const { register, handleSubmit, formState: { errors } } = useForm();
 
@@ -21,22 +21,17 @@ const FindCharacterForm = () => {
 
     useEffect(()=> {
         loadCharacterbyName(input)
+        //eslint-disable-next-line
     },[input])
 
     
     const onSubmit = ({searchForm}) => setInput(searchForm);
 
-    const renderChar = (pers) => {
-        if(pers) {
-            return pers.map(({id, name}) =>
+    const renderChar =  data ? data.map(({id, name}) =>
             <div className="FindCharacterForm__resultOk" key={name}>
                 <span>There is! Visit  {name} page?</span>
                 <Link to={`character/${id}`}><button className="button button__grey">TO PAGE</button></Link>
-            </div>)
-        }
-    };
-
-    const res = renderChar(data);
+            </div>) : null
 
     return (
         <div className="FindCharacterForm">
@@ -48,11 +43,15 @@ const FindCharacterForm = () => {
                 <button className="button  button__search">FIND</button>
             </form>
             <div className="FindCharacterForm__result">
-                {errors.searchForm?.message? <span className="FindCharacterForm__error" style={{animation: 'fadeIn .4s'}}>{errors.searchForm?.message}</span> : null}
-                {res}
-                {data === false? <span className="FindCharacterForm__error" style={{animation: 'fadeIn .4s'}}>The character was not found. Check the name and try again</span> : null}
+                {errors.searchForm?.message 
+                    ? <span className="FindCharacterForm__error" style={{animation: 'fadeIn .4s'}}>{errors.searchForm?.message}</span> 
+                    : null}
+                {renderChar}
+                {!data && <span className="FindCharacterForm__error" style={{animation: 'fadeIn .4s'}}>
+                    The character was not found. Check the name and try again</span>}
                 {loading? <div style={{animation: 'fadeIn .4s'}}>Loading ...</div> : null}
-                {error? <div className='FindCharacterForm__error' style={{animation: 'fadeIn .4s'}}>Connection Error</div> : null}
+                {error? <div className='FindCharacterForm__error' style={{animation: 'fadeIn .4s'}}>
+                    Connection Error</div> : null}
             </div>
         </div>
     )

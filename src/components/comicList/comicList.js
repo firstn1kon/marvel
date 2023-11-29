@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link} from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
 import useMarvelApi from '../services/marvelAPI';
 
-import Spinner from '../spinner/spinner';
 import Error from '../error/Error';
 import Banner from "../banner/Banner";
 
@@ -28,10 +27,10 @@ function ComicList() {
 
     useEffect(() => {
         loadComics();
+        //eslint-disable-next-line
     }, [])
 
-    const renderComics = (comics) => {
-        const comicsList = comics.map(({id, thumbnail, title, price}, i) => {
+    const renderComics = useMemo(()=>comics.map(({id, thumbnail, title, price}, i) => {
             return (
                 <Link to={`/comics/${id}`} key={`${id}${i}`}>
                 <div className="comicsList__item" style={{animation: `charList .7s`}}>
@@ -41,37 +40,34 @@ function ComicList() {
                 </div>
                 </Link>
             )
-        })
-        return (
-            comicsList
-        )
-    }
+        }),[comics])
 
-    const comicsList = renderComics(comics);
-    const onLoading = loading? <Spinner/> : null;
-    const onError = error? <Error/> : null;
-    const buttonNone = end? {display: "none"} : null;
+    const display = end? {display: "none"} : null;
 
-  return (
-    <>
-    <Helmet>
-        <meta name="description" content="Comics marvel page"/>
-        <title>Comics of Marvel</title>
-    </Helmet>
-    <Banner/>
-    <section className="comicListSection">
-        <div className="container">
-        
-        {onError}
-            <div className="comicsList">
-                {comicsList}
-            </div>
-            <button  style={buttonNone} disabled={loading} className="button button__load" onClick={(e) => {e.preventDefault(); loadComics(offset)}}>LOAD MORE</button>
-            {onLoading}
-        </div>
-    </section>
-    </>
-  );
+    if(error) return <><Banner/><Error/></>
+    return (
+        <>
+            <Helmet>
+                <meta name="description" content="Comics marvel page"/>
+                <title>Comics of Marvel</title>
+            </Helmet>
+            <Banner/>
+            <section className="comicListSection">
+                <div className="container">
+                    <div className="comicsList">
+                        {renderComics}
+                    </div>
+                    <button  
+                        style={display} 
+                        disabled={loading} 
+                        className="button button__load" 
+                        onClick={loadComics}>
+                        {loading? "LOADING ..." : 'LOAD MORE'}
+                    </button>
+                </div>
+            </section>
+        </>
+    );
 }
 
 export default ComicList;

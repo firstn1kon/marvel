@@ -1,4 +1,4 @@
-import { useEffect, useState} from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import useMarvelApi from '../services/marvelAPI';
 
 import Spinner from '../spinner/spinner';
@@ -6,9 +6,9 @@ import Error from '../error/Error';
 import CharInfo from '../charInfo/CharInfo';
 import ErrorBoundaries from '../errorBoundaries/ErrorBoundaries';
 import FindCharacterForm from '../findCharacterForm/FindCharacterForm';
+import CharItem from './CharItem';
 
 import './chooseCharacter.scss';
-
 
 const CharList = () => {
 
@@ -19,8 +19,10 @@ const CharList = () => {
     const {loading, error, getAllCharacters} = useMarvelApi();
 
     useEffect(()=> {
-            loadComiclist();
+        loadComiclist();
+        //eslint-disable-next-line
     },[]);
+
     // Для LazyLoad
     // useEffect(()=> {
     //     window.addEventListener('scroll', lazyLoad);
@@ -29,9 +31,15 @@ const CharList = () => {
 
     //     }
     // },[offSet]);
-
-    const loadComiclist = (offset) => {
-        getAllCharacters(offset)
+    // Для LazyLoad
+    // const lazyLoad = () => {
+    //     if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+    //         loadComiclist(offSet);
+    //     }
+    // }
+    
+    const loadComiclist = () => {
+        getAllCharacters(offSet)
         .then(newChar => {
             let end = false;
             if (newChar.length < 9) {
@@ -44,74 +52,36 @@ const CharList = () => {
         )
     }
 
-    const onSelectedChar = (id) => {
-        setSelectedChar(id);
-
-    }
-    // Для LazyLoad
-    // const lazyLoad = () => {
-    //     if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-    //         loadComiclist(offSet);
-    //     }
-    // }
-
-/*     // Реализация через рефы фокуса карточек и класса активности
-    const cardsRefs = useRef([]);
-    const onFocusCard = (card) => {
-        cardsRefs.current.forEach(item => {
-            item.classList.remove('active');
-        });
-        cardsRefs.current[card].classList.add('active');
-        cardsRefs.current[card].focus();
-    }  */
-
-    const renderListItems = (items = []) => {
-        const listItems = items.map(({name, thumbnail, id}, i) => {
-            const noFound = thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" ? {objectFit: "fill"} : null;
-            const active = selectedChar === id ? " active" : "";
-            return (
-                <div 
-                    className={`chooseCharacter__item ${active}`} 
-                    tabIndex={0} 
-                    key={id}
-                    style={{animation: `charList .7s`}}
-                    /* Для рефов 
-                    ref={(ref) => cardsRefs.current[i] = ref} */
-                    onKeyPress={(e) => {
-                        e.preventDefault();
-                    if (e.key === "Enter" || e.key === " ") {
-                        onSelectedChar(id);
-                    /*  для рефов 
-                        onFocusCard(i) */
-                    }
-                    }} 
-                    onClick={()=>{onSelectedChar(id); 
-                        /* для рефов 
-                        onFocusCard(i); */}}
-                    /* onFocus={()=>onSelectedChar(id)} */
-                >
-                    <div className="chooseCharacter__item-img"><img src={thumbnail} alt={name} style={noFound}/></div>
-                    <h2>{name}</h2>
-                </div>
-            )
-        });
-        return listItems
-    }
-
-        const listItems = renderListItems(char),
-              onError = error ? <Error/> : null,
-              onLoading = loading ? 'visible': "hidden",
-              dNone = (onError || loading ||  end) ? {visibility: 'hidden'} : null;
+    const content = useMemo(
+        () => char.map((data, i) => <CharItem key ={`${data.id}${i}`} data={data} selectedChar={selectedChar} setCharId={setSelectedChar}/>)
+        ,[char, selectedChar])
+    const onError = error ? <Error/> : null
+    const onLoading = loading ? 'visible': "hidden"
+    const dNone = (onError || loading || end) ? {visibility: 'hidden'} : null;
 
         return (
             <section className="chooseCharacter">
                 <div className="container">
                     <div className="chooseCharacter__wrapper" style={{position: 'relative'}}>
                         <div className="chooseCharacter__list" >
-                            {listItems}
+                            {content}
                             {onError}
-                            <button disabled={loading} href="#"  style={dNone} className="button button__load rotable"  onClick={(e) => {e.preventDefault(); loadComiclist(offSet);}}>LOAD MORE</button>
-                            <div style={{position: 'absolute', bottom: "-220px", left: '50%', transform: 'translateX(-50%)', visibility: onLoading}}><Spinner/></div>
+                            {!!char.length &&
+                            <button 
+                                disabled={loading} 
+                                style={dNone} 
+                                className="button button__load rotable"  
+                                onClick={loadComiclist}>
+                                    {loading? 'LOADING...': 'LOAD MORE'}
+                            </button>}
+                            <div style={
+                                {position: 'absolute', 
+                                bottom: "-220px", 
+                                left: '50%', 
+                                transform: 'translateX(-50%)', 
+                                visibility: onLoading}}>
+                                <Spinner/>
+                            </div>
                         </div>
                         <div className="chooseCharacter__rightBlock">
                             <ErrorBoundaries><CharInfo selectedChar={selectedChar}/></ErrorBoundaries>

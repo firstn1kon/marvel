@@ -9,7 +9,7 @@ const Error404 = lazy(() => import('../pages/Error404'));
 function App() {
   return (
     <BrowserRouter>
-      <Suspense fallback={<span>loading ...</span>}>
+      <Suspense fallback={<span>Loading...</span>}>
       <div className="App">
           <Header/>
           <main className="main">

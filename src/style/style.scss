@@ -7,10 +7,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
- 
 }
-
-
 
 a {
     transition: .4s all;
@@ -22,7 +19,6 @@ a {
 ul {
     margin-bottom: 0;
 }
-
 
 .container {
     max-width: 1140px;
@@ -55,7 +51,6 @@ ul {
     }
 
     100% {
-
         transform: scale(1);
         opacity: 1;
         transform: translateX(0);
@@ -80,7 +75,6 @@ ul {
     
 }
 
-
 @media  (max-width: 992px) {
     .container {
         max-width: 720px;
@@ -94,6 +88,7 @@ ul {
     }
     
 }
+
 @media  (max-width: 576px) {
     .container {
         max-width: 540px;

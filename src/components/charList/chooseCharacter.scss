@@ -6,10 +6,7 @@
         grid-template-columns: auto 425px;
         padding-bottom: 40px;
         grid-column-gap: 25px;
-        justify-content: space-between;
         align-items: start;
-        
-
     }
     &__list {
         display: flex;
@@ -54,7 +51,6 @@
                 object-fit: cover;
                 
             }
-            
         }
 
     }
@@ -93,8 +89,6 @@
                 &:not(:last-child) {
                     margin-bottom: 10px;
                 }
-
-
             }
 
         }
@@ -104,7 +98,6 @@
             font-size: 18px;
             line-height: 21px;
         }
-        
     }
     &__nav {
         display: flex;
@@ -117,7 +110,6 @@
         }
     }
     &__info {
-        
         a {
             &:not(:last-child) {
                 margin-bottom: 10px;
