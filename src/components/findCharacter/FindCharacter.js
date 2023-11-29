@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo} from 'react';
 import { Link } from 'react-router-dom';
 
 import useMarvelApi from '../services/marvelAPI';
+import useDebounce from '../../hooks/debounce.hook';
 
 import './findCharacter.scss';
 
@@ -12,13 +13,15 @@ const FindCharacter = () => {
     const [input, setInput] = useState("");
     const [dnone, setDnone] = useState(true);
 
+    const debouncedData = useDebounce(input, 400)
+
     useEffect(()=> {
         if(input === '') {
             setData([]);
         }
-        loadCharacterbyName(input)
+        loadCharacterbyName(debouncedData)
         //eslint-disable-next-line
-    },[input])
+    },[debouncedData])
 
     const loadCharacterbyName = (name) => {
         if(!name) {
